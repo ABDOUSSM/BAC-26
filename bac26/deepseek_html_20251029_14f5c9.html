@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Haunted House</title>
+  <link href="https://fonts.googleapis.com/css2?family=Eater&family=Creepster&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Eater', cursive;
+      background: #000 url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+      color: #8b0000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      text-align: center;
+      z-index: 10;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 15px;
+      border: 2px solid #8b0000;
+      box-shadow: 0 0 20px #ff0000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #ff0000;
+      animation: flicker 3s infinite alternate;
+    }
+
+    button {
+      background-color: #8b0000;
+      border: 2px solid #ff0000;
+      color: #fff;
+      padding: 15px 25px;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-family: 'Creepster', cursive;
+      letter-spacing: 2px;
+      box-shadow: 0 0 15px #ff0000;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      background-color: #ff0000;
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #ff0000;
+    }
+
+    #hauntedImage {
+      display: none;
+      margin-top: 20px;
+      width: 300px;
+      height: 300px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ff0000;
+      border: 2px solid #8b0000;
+      animation: float 3s ease-in-out infinite;
+      object-fit: cover;
+    }
+
+    /* Floating animation for image */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Flickering text effect */
+    @keyframes flicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        text-shadow:
+          0 0 4px #fff,
+          0 0 11px #fff,
+          0 0 19px #fff,
+          0 0 40px #ff0000,
+          0 0 80px #ff0000,
+          0 0 90px #ff0000,
+          0 0 100px #ff0000,
+          0 0 150px #ff0000;
+      }
+      20%, 24%, 55% {       
+        text-shadow: none;
+      }
+    }
+
+    /* Ghost elements */
+    .ghost {
+      position: absolute;
+      width: 50px;
+      height: 65px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50% 50% 0 0;
+      animation: ghostFloat 15s linear infinite;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    .ghost:before, .ghost:after {
+      content: '';
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      width: 20px;
+      height: 25px;
+      border-radius: 50%;
+      bottom: -12px;
+    }
+
+    .ghost:before {
+      left: 5px;
+    }
+
+    .ghost:after {
+      right: 5px;
+    }
+
+    @keyframes ghostFloat {
+      0% {
+        top: 110%;
+        left: 10%;
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        top: -10%;
+        left: 90%;
+        opacity: 0;
+      }
+    }
+
+    /* Blood drips */
+    .blood-drip {
+      position: absolute;
+      width: 5px;
+      height: 50px;
+      background: #8b0000;
+      border-radius: 0 0 5px 5px;
+      top: -50px;
+      animation: drip 5s infinite;
+      opacity: 0;
+    }
+
+    @keyframes drip {
+      0% {
+        top: -50px;
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        top: 100vh;
+        opacity: 0;
+      }
+    }
+
+    /* Scary face overlay */
+    .scary-face {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('') center/contain no-repeat;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      transition: opacity 0.5s;
+    }
+
+    /* Screen shake effect */
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(3px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+
+    /* Floating candles */
+    .candle {
+      position: absolute;
+      width: 20px;
+      height: 60px;
+      background: #8B4513;
+      border-radius: 5px;
+      bottom: 0;
+      z-index: 2;
+    }
+
+    .flame {
+      position: absolute;
+      width: 15px;
+      height: 30px;
+      background: #ff4500;
+      border-radius: 50% 50% 20% 20%;
+      top: -30px;
+      left: 2.5px;
+      box-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500, 0 0 30px #ff4500;
+      animation: flickerFlame 0.5s infinite alternate;
+    }
+
+    @keyframes flickerFlame {
+      0% { transform: scaleY(1); }
+      100% { transform: scaleY(1.1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> 9awi Niveau ….😉</h1>
+    <button id="showImageBtn">REVEAL THE HORROR</button>
+    <img id="hauntedImage" src="Gemini_Generated_Image_1cjc3i1cjc3i1cjc.png" alt="Scary Face">
+  </div>
+
+  <!-- Scary face overlay -->
+  <div class="scary-face" id="scaryFace"></div>
+
+  <script>
+    const btn = document.getElementById('showImageBtn');
+    const img = document.getElementById('hauntedImage');
+    const scaryFace = document.getElementById('scaryFace');
+    const body = document.body;
+
+    // Create ghost elements
+    for (let i = 0; i < 5; i++) {
+      const ghost = document.createElement('div');
+      ghost.className = 'ghost';
+      ghost.style.left = Math.random() * 90 + '%';
+      ghost.style.animationDelay = Math.random() * 15 + 's';
+      document.body.appendChild(ghost);
+    }
+
+    // Create blood drips
+    for (let i = 0; i < 10; i++) {
+      const drip = document.createElement('div');
+      drip.className = 'blood-drip';
+      drip.style.left = Math.random() * 100 + '%';
+      drip.style.animationDelay = Math.random() * 5 + 's';
+      document.body.appendChild(drip);
+    }
+
+    // Create candles
+    for (let i = 0; i < 6; i++) {
+      const candle = document.createElement('div');
+      candle.className = 'candle';
+      candle.style.left = Math.random() * 100 + '%';
+      
+      const flame = document.createElement('div');
+      flame.className = 'flame';
+      candle.appendChild(flame);
+      
+      document.body.appendChild(candle);
+    }
+
+    // Button click event
+    btn.addEventListener('click', () => {
+      // Play scary sound
+      const audio = new Audio('Nahki.mp3');
+      audio.play();
+      
+      // Play the embedded scary song
+      const scarySong = new Audio('Nahki.mp3');
+      scarySong.volume = 0.7;
+      scarySong.play();
+      
+      // Show image with animation
+      img.style.display = 'block';
+      
+      // Hide button
+      btn.style.display = 'none';
+      
+      // Shake the screen
+      body.classList.add('shake');
+      setTimeout(() => {
+        body.classList.remove('shake');
+      }, 500);
+      
+      // Show scary face briefly
+      setTimeout(() => {
+        scaryFace.style.opacity = '1';
+        setTimeout(() => {
+          scaryFace.style.opacity = '0';
+        }, 1000);
+      }, 800);
+      
+      // Change background to more scary
+      setTimeout(() => {
+        document.body.style.background = '#000 url("https://images.unsplash.com/photo-1511367461-ecc8d0e8b317?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80")';
+      }, 1000);
+      
+      // Add more blood drips
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          const drip = document.createElement('div');
+          drip.className = 'blood-drip';
+          drip.style.left = Math.random() * 100 + '%';
+          drip.style.animationDelay = '0s';
+          drip.style.animationDuration = '3s';
+          document.body.appendChild(drip);
+          
+          setTimeout(() => {
+            document.body.removeChild(drip);
+          }, 3000);
+        }, i * 300);
+      }
+      
+      // Play evil laugh after a delay
+      setTimeout(() => {
+        const laugh = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-evil-laugh-503.mp3');
+        laugh.play();
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
